@@ -1,14 +1,23 @@
+import React , {Suspense} from 'react';
 import { Redirect, Route, Switch } from "react-router-dom";
 import Layout from "./components/layout/Layout";
-import AllQuotes from './pages/AllQuotes';
-import NewQuotes from "./pages/NewQuotes";
-import NotFound from "./pages/NotFound";
-import QuoteDetail from "./pages/QuoteDetail";
+import LoadingSpinner from './components/UI/LoadingSpinner';
+
+// here component will be lazy loaded when it needed
+const AllQuotes = React.lazy(() => import('./pages/AllQuotes'));
+const NewQuotes = React.lazy(() => import('./pages/NewQuotes'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
+const QuoteDetail = React.lazy(() => import('./pages/QuoteDetail'));
 
 
 const App= () => {
   return (
     <Layout>
+    <Suspense fallback={
+      <div className='centered'>
+        <LoadingSpinner />
+      </div>
+    }>
       <Switch>
         <Route path="/" exact>
           <Redirect to="/quotes" />
@@ -26,7 +35,8 @@ const App= () => {
            <NotFound />
         </Route>
      </Switch>
-    </Layout>
+     </Suspense>
+     </Layout>
   );
 }
 
